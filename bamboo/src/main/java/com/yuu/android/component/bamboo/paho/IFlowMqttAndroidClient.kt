@@ -43,11 +43,13 @@ interface IFlowMqttAndroidClient {
     /**
      * 订阅消息
      * @param flowMqttMessage 消息对象
-     * @param callback mqtt行为回调
+     * @param actionListener mqtt行为回调
+     * @param messageListener mqtt 消息回调
      * */
     fun subscribeTopic(
         flowMqttMessage: FlowMqttMessage,
-        callback: IFlowMqttActionListener?
+        actionListener : IFlowMqttActionListener?,
+        messageListener: IFlowMqttMessageListener?
     ): IMqttToken
 
 

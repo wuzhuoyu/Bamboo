@@ -10,10 +10,4 @@ import org.eclipse.paho.client.mqttv3.IMqttToken
  * @Date: 2021/7/26 23:34
  */
 
-interface IFlowMqttActionListener: IMqttActionListener {
-    override fun onSuccess(asyncActionToken: IMqttToken?) {
-    }
-
-    override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-    }
-}
+interface IFlowMqttActionListener: IMqttActionListener

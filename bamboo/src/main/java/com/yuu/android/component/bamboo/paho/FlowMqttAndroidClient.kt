@@ -86,11 +86,12 @@ class FlowMqttAndroidClient : MqttAsyncClient, IFlowMqttAndroidClient {
 
     override fun subscribeTopic(
         flowMqttMessage: FlowMqttMessage,
-        callback: IFlowMqttActionListener?
+        actionListener : IFlowMqttActionListener?,
+        messageListener: IFlowMqttMessageListener?
     ): IMqttToken {
         val topicFilters: String = flowMqttMessage.getMessageTopic() ?: ""
         val qos: Int = flowMqttMessage.getMessageQoS().value()
-        return super.subscribe(topicFilters, qos, null, callback)
+        return super.subscribe(topicFilters, qos, null, actionListener,messageListener)
     }
 
     override fun unsubscribeTopic(

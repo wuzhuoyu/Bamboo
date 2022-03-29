@@ -45,18 +45,13 @@ interface FlowMqttApi {
      * */
     fun publishMqttMessage(flowMqttMessage: FlowMqttMessage):Flow<Boolean>
 
-    /**
-     * 订阅消息
-     * @return FlowMqttMessage mqtt消息实体
-     * */
-    fun subscribeMqttMessage():Flow<FlowMqttMessage>
 
     /**
      * 订阅主题
      * @param flowMqttMessage mqtt消息实体
      * @return Boolean 返回值
      * */
-    fun subscribeBrokerServerTopic(flowMqttMessage: FlowMqttMessage):Flow<Boolean>
+    fun subscribeBrokerServerTopic(flowMqttMessage: FlowMqttMessage):Flow<FlowMqttMessage>
 
     /**
      * 取消订阅主题

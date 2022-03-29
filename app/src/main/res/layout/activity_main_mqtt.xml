@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".sample.MainMQTTActivity">
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_connect"
+        />
+
+    <Button
+        android:id="@+id/btn_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="连接"
+        app:layout_constraintTop_toBottomOf="@id/tv_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_disconnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="断开连接"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_connect" />
+
+    <Button
+        android:id="@+id/btn_reconnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="重新连接"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_disconnect" />
+
+    <Button
+        android:id="@+id/btn_close_client"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="关闭客户端"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_reconnect" />
+
+    <Button
+        android:id="@+id/btn_subscribe_topic1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="订阅主题1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_close_client" />
+
+
+
+    <Button
+        android:id="@+id/btn_subscribe_topic2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="订阅主题2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_subscribe_topic1" />
+
+    <Button
+        android:id="@+id/btn_unsubscribe_topic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消订阅主题"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_subscribe_topic2" />
+
+    <Button
+        android:id="@+id/btn_publish_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发送消息"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_unsubscribe_topic" />
+
+    <Button
+        android:id="@+id/btn_receive_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="接收消息"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_publish_message" />
+
+    <Button
+        android:id="@+id/btn_subscribe_message_publish_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="订阅消息发送状态"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_receive_message" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
