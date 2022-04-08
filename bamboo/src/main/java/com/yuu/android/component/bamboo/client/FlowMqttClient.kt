@@ -1,19 +1,16 @@
-package com.yuu.android.component.bamboo
+package com.yuu.android.component.bamboo.client
 
 import android.util.Log
-import android.util.SparseArray
 import com.yuu.android.component.bamboo.api.FlowMqttApi
 import com.yuu.android.component.bamboo.config.FlowMqttConnectOptions
 import com.yuu.android.component.bamboo.exception.FlowMqttException
 import com.yuu.android.component.bamboo.model.FlowBrokerConnectStatus
 import com.yuu.android.component.bamboo.model.FlowMessagePublishStatus
 import com.yuu.android.component.bamboo.model.FlowMqttMessage
-import com.yuu.android.component.bamboo.paho.FlowMqttActionListener
 import com.yuu.android.component.bamboo.paho.FlowMqttAndroidClient
 import com.yuu.android.component.bamboo.paho.IFlowMqttActionListener
 import com.yuu.android.component.bamboo.paho.IFlowMqttMessageListener
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.channels.trySendBlocking
@@ -28,7 +25,7 @@ import org.eclipse.paho.client.mqttv3.*
  * @Date: 2021/4/29 11:53
  */
 
-object FlowMqttClient : FlowMqttApi {
+open class FlowMqttClient : FlowMqttApi {
 
     /**当前MQTT连接客户端*/
     private var client: FlowMqttAndroidClient? = null
@@ -40,13 +37,6 @@ object FlowMqttClient : FlowMqttApi {
     private val brokerStatus: FlowBrokerConnectStatus by lazy {
         FlowBrokerConnectStatus(isConnected = false)
     }
-
-    /**订阅消息流*/
-    private var subscribeMessageFlow = MutableSharedFlow<FlowMqttMessage>(
-        replay = 0,
-        extraBufferCapacity = 5,
-        onBufferOverflow = BufferOverflow.SUSPEND
-    )
 
     override fun connectToBrokerService(mqttConnectOptions: FlowMqttConnectOptions): Flow<Boolean> {
         return flowOf(mqttConnectOptions).map {
@@ -186,9 +176,6 @@ object FlowMqttClient : FlowMqttApi {
 
 
     }
-
-    fun getSubscribeMessageFlow(): MutableSharedFlow<FlowMqttMessage> = subscribeMessageFlow
-
 
     override fun subscribeBrokerServerTopic(flowMqttMessage: FlowMqttMessage): Flow<FlowMqttMessage> {
         return flowOf(flowMqttMessage).map {

@@ -16,7 +16,6 @@ open class FlowMqttConnectOptions(builder: FlowMqttConnectOptionsBuilder,) {
     var userName: String ?=null
     var password:String ?=null
     var clientId: String ?=null
-    var topics: Array<String> = arrayOf()
     var retryIntervalTime: Int = -1
     var connectionTimeout: Int = 30
     var keepAliveInterval : Int = 60
@@ -27,7 +26,6 @@ open class FlowMqttConnectOptions(builder: FlowMqttConnectOptionsBuilder,) {
         this.userName = builder.account
         this.password = builder.password
         this.clientId = builder.clientId
-        this.topics = builder.topics
         this.retryIntervalTime = builder.retryIntervalTime
         this.connectionTimeout = builder.connectionTimeout
         this.keepAliveInterval = builder.keepAliveInterval

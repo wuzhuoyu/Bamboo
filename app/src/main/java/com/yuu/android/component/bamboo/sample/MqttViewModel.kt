@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yuu.android.component.bamboo.FlowMqttClient
+import com.yuu.android.component.bamboo.client.FlowMqttClient
 import com.yuu.android.component.bamboo.config.FlowMqttConnectOptions
 import com.yuu.android.component.bamboo.model.FlowMqttMessage
 import kotlinx.coroutines.Dispatchers
