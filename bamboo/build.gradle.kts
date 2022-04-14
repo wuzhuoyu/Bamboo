@@ -75,7 +75,7 @@ dependencies{
 afterEvaluate {
     publishing{
         publications {
-            create<MavenPublication>("maven") {
+            create<MavenPublication>("release") {
                 groupId = "com.yuu.android.component"
                 artifactId = "bamboo"
                 version = "0.0.1"
