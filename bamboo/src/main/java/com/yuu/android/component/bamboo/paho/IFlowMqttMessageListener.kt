@@ -12,7 +12,4 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
  * @Date: 2021/7/26 23:34
  */
 
-interface IFlowMqttMessageListener: IMqttMessageListener {
-    override fun messageArrived(topic: String?, message: MqttMessage?) {
-    }
-}
+interface IFlowMqttMessageListener: IMqttMessageListener

@@ -55,14 +55,14 @@ open class FlowMqttClient : FlowMqttApi {
                     override fun onSuccess(asyncActionToken: IMqttToken?) {
                         options = it
                         brokerStatus.connectedSuccess()
-                        trySendBlocking(true).onFailure {
-                            throw FlowMqttException("connect broker error", it)
-                        }
+                        trySend(true)
+                        close()
                     }
 
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                         brokerStatus.error = exception
-                        cancel(CancellationException("connect broker error", exception))
+                        close()
+                        throw FlowMqttException("broker connect failure", cause = exception)
                     }
                 }
 
@@ -75,10 +75,12 @@ open class FlowMqttClient : FlowMqttApi {
                     brokerStatus.error = e
                     throw FlowMqttException("broker connect failure", cause = e)
                 }
-                awaitClose {}
+                awaitClose {
+                    Log.i("FlowMqtt", ":::连接broker流关闭")
+                }
             }
         }.catch {
-            if (this is FlowMqttException){
+            if (this is FlowMqttException) {
                 restartConnectToBrokerService()
             }
         }
@@ -91,28 +93,30 @@ open class FlowMqttClient : FlowMqttApi {
             if (brokerStatus.isConnecting) throw FlowMqttException.brokerHasBeenConnecting else it
         }.flatMapConcat {
             callbackFlow {
-                try {
-                    client?.disconnectBroker(object : IFlowMqttActionListener {
-                        override fun onSuccess(asyncActionToken: IMqttToken?) {
-                            brokerStatus.disconnectSuccess()
-                            trySendBlocking(true).onFailure {
-                                throw FlowMqttException("disconnect error", it)
-                            }
-                        }
+                //asynchronous callback result
+                val mqttActionListener = object : IFlowMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        brokerStatus.disconnectSuccess()
+                        trySend(true)
+                        close()
+                    }
 
-                        override fun onFailure(
-                            asyncActionToken: IMqttToken?,
-                            exception: Throwable?
-                        ) {
-                            brokerStatus.error = exception
-                            cancel(CancellationException("disconnect error", exception))
-                        }
-                    })
+                    override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                        brokerStatus.error = exception
+                        close()
+                        throw FlowMqttException("broker disconnect failure", cause = exception)
+                    }
+                }
+
+                try {
+                    client?.disconnectBroker(mqttActionListener)
                 } catch (e: MqttException) {
                     brokerStatus.error = e
                     throw FlowMqttException("broker disconnect failure", cause = e)
                 }
-                awaitClose {}
+                awaitClose {
+                    Log.i("FlowMqtt", ":::断开broker流关闭")
+                }
             }
         }
     }
@@ -125,7 +129,7 @@ open class FlowMqttClient : FlowMqttApi {
                 client?.close()
                 brokerStatus.disconnectSuccess()
             } catch (e: MqttException) {
-                throw FlowMqttException("", cause = e)
+                throw FlowMqttException("close client error", cause = e)
             }
         }
     }
@@ -147,29 +151,30 @@ open class FlowMqttClient : FlowMqttApi {
             if (brokerStatus.isConnected) it else throw FlowMqttException.brokerOffline
         }.flatMapConcat {
             callbackFlow {
+                //asynchronous callback result
+                val mqttActionListener = object : IFlowMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        trySend(true)
+                    }
+
+                    override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                        close()
+                        throw FlowMqttException("publish message error", exception)
+                    }
+                }
+
                 try {
                     client?.publishMessage(
                         flowMqttMessage = flowMqttMessage,
-                        callback = object : IFlowMqttActionListener {
-                            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                                trySendBlocking(true).onFailure {
-                                    throw FlowMqttException("publish message error", it)
-                                }
-                            }
-
-                            override fun onFailure(
-                                asyncActionToken: IMqttToken?,
-                                exception: Throwable?
-                            ) {
-                                cancel(CancellationException("publish message error", exception))
-                            }
-                        }
+                        callback = mqttActionListener
                     )
                 } catch (e: MqttException) {
                     throw FlowMqttException(message = "消息发送失败", cause = e)
                 }
 
-                awaitClose {}
+                awaitClose {
+                    Log.i("FlowMqtt", "::: 发送消息流关闭")
+                }
 
             }
         }
@@ -184,40 +189,42 @@ open class FlowMqttClient : FlowMqttApi {
             if (brokerStatus.isConnected) it else throw FlowMqttException.brokerOffline
         }.flatMapConcat {
             callbackFlow {
-                client?.subscribeTopic(
-                    flowMqttMessage = it,
-                    actionListener = object : IFlowMqttActionListener {
-                        override fun onSuccess(asyncActionToken: IMqttToken?) {
-                            Log.i("MQTT","subscribe broker success! ")
-                        }
 
-                        override fun onFailure(
-                            asyncActionToken: IMqttToken?,
-                            exception: Throwable?
-                        ) {
-                            cancel(
-                                CancellationException(
-                                    "subscribe topic error:${exception?.message}",
-                                    exception
-                                )
-                            )
-                        }
-                    },
-                    messageListener = object :IFlowMqttMessageListener{
-                        override fun messageArrived(topic: String?, message: MqttMessage?) {
+                //asynchronous callback result
+                val mqttActionListener = object : IFlowMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        Log.i("FlowMqtt", "subscribe topic success! ")
+                    }
 
-                            message?.let {
-                                trySendBlocking(FlowMqttMessage.create(topic,it)).onFailure {throwable->
-                                    throw FlowMqttException(
-                                        "subscribe topic error : ${throwable?.message}",
-                                        throwable
-                                    )
-                                }
-                            }
+                    override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                        close()
+                        Log.i("FlowMqtt", "subscribe topic failure! ")
+                        throw FlowMqttException(message = "订阅主题失败", cause = exception)
+                    }
+                }
+
+                val mqttMessageListener = object : IFlowMqttMessageListener {
+                    override fun messageArrived(topic: String?, message: MqttMessage?) {
+                        message?.let {
+                            trySend(FlowMqttMessage.create(topic, it))
                         }
                     }
-                )
-                awaitClose { }
+                }
+
+                try {
+                    client?.subscribeTopic(
+                        flowMqttMessage = it,
+                        actionListener = mqttActionListener,
+                        messageListener = mqttMessageListener
+                    )
+                } catch (e: MqttException) {
+                    close()
+                    throw FlowMqttException(message = "订阅主题失败", cause = e)
+                }
+
+                awaitClose {
+                    Log.i("FlowMqtt", "::: 订阅主题流关闭")
+                }
             }
         }
     }
@@ -229,24 +236,30 @@ open class FlowMqttClient : FlowMqttApi {
             if (brokerStatus.isConnected) it else throw FlowMqttException.brokerOffline
         }.flatMapConcat {
             callbackFlow {
-                client?.unsubscribeTopic(
-                    flowMqttMessage = it,
-                    callback = object : IFlowMqttActionListener {
-                        override fun onSuccess(asyncActionToken: IMqttToken?) {
-                            trySendBlocking(true).onFailure {
-                                throw FlowMqttException("unsubscribe topic error", it)
-                            }
-                        }
 
-                        override fun onFailure(
-                            asyncActionToken: IMqttToken?,
-                            exception: Throwable?
-                        ) {
-                            cancel(CancellationException("unsubscribe topic error", exception))
-                        }
+                //asynchronous callback result
+                val mqttActionListener = object : IFlowMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        trySend(true)
+                        close()
                     }
-                )
-                awaitClose { }
+
+                    override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                        close()
+                        throw FlowMqttException("unsubscribe topic error", exception)
+                    }
+                }
+
+                try {
+                    client?.unsubscribeTopic(flowMqttMessage = it, callback = mqttActionListener)
+                } catch (e: MqttException) {
+                    close()
+                    throw FlowMqttException(message = "取消订阅主题失败", cause = e)
+                }
+
+                awaitClose {
+                    Log.i("FlowMqtt", "::: 取消订阅主题流关闭")
+                }
             }
         }
     }
@@ -256,19 +269,28 @@ open class FlowMqttClient : FlowMqttApi {
             it ?: throw FlowMqttException.clientIsNull
         }.flatMapConcat {
             callbackFlow {
-                it.setCallback(object : MqttCallback {
+                val mqttCallback = object : MqttCallback {
                     override fun connectionLost(cause: Throwable?) {
-                        Log.i("MQTT", "broker lost：cause:$cause")
+                        Log.i("FlowMqtt", "broker lost:::$cause")
                         brokerStatus.isConnected = false
-                        trySendBlocking(false)
+                        trySend(false)
                     }
 
                     override fun messageArrived(topic: String?, message: MqttMessage) {}
 
                     override fun deliveryComplete(token: IMqttDeliveryToken) {}
-                })
+                }
+                try {
+                    it.setCallback(mqttCallback)
+                } catch (e: Exception) {
+                    close()
+                    throw FlowMqttException("subscribe Connection Status error", e)
+                }
 
-                awaitClose { }
+
+                awaitClose {
+                    Log.i("FlowMqtt", "::: 订阅连接状态流关闭")
+                }
             }
         }
     }
@@ -278,28 +300,37 @@ open class FlowMqttClient : FlowMqttApi {
             it ?: throw FlowMqttException.clientIsNull
         }.flatMapConcat {
             callbackFlow {
-                it.setCallback(object : MqttCallback {
+
+                val mqttCallback = object : MqttCallback {
                     override fun connectionLost(cause: Throwable?) {}
 
                     override fun messageArrived(topic: String?, message: MqttMessage) {}
 
                     override fun deliveryComplete(token: IMqttDeliveryToken) {
                         Log.i(
-                            "MQTT",
+                            "FlowMqtt",
                             "消息发送完成：topic:${token.topics},message:${token.message},messageId${token.messageId}"
                         )
-                        trySendBlocking(
+                        trySend(
                             FlowMessagePublishStatus(
                                 isComplete = true,
                                 flowMqttMessage = FlowMqttMessage.create(message = token.message)
                             )
-                        ).onFailure {
-                            throw FlowMqttException("publish message status error", it)
-                        }
+                        )
                     }
-                })
+                }
 
-                awaitClose { }
+                try {
+                    it.setCallback(mqttCallback)
+                } catch (e: Exception) {
+                    close()
+                    throw FlowMqttException("publish message status error", e)
+                }
+
+
+                awaitClose {
+                    Log.i("FlowMqtt", "::: 订阅连接状态流关闭")
+                }
             }
         }
     }

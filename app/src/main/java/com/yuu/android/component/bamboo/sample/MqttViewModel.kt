@@ -21,6 +21,8 @@ import kotlinx.coroutines.launch
 
 class MqttViewModel : ViewModel() {
 
+    val flowMqttClient by lazy { FlowMqttClient() }
+
     var data = MutableLiveData<String>()
 
     fun connectToBroker() {
@@ -35,7 +37,7 @@ class MqttViewModel : ViewModel() {
                 clientId = "flow_mqtt_client"
             }
 
-            FlowMqttClient.connectToBrokerService(options)
+            flowMqttClient.connectToBrokerService(options)
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.d("MQTT", "connect broker error:${it.message}")
@@ -48,7 +50,7 @@ class MqttViewModel : ViewModel() {
 
     fun disConnectToBroker() {
         viewModelScope.launch {
-            FlowMqttClient.disConnectToBrokerService()
+            flowMqttClient.disConnectToBrokerService()
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.d("MQTT", "disconnect broker error:${it.message}")
@@ -61,7 +63,7 @@ class MqttViewModel : ViewModel() {
 
     fun restartConnectToBroker() {
         viewModelScope.launch {
-            FlowMqttClient.restartConnectToBrokerService()
+            flowMqttClient.restartConnectToBrokerService()
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.d("MQTT", "restart connect broker error:${it.message}")
@@ -74,7 +76,7 @@ class MqttViewModel : ViewModel() {
 
     fun closeClient() {
         viewModelScope.launch {
-            FlowMqttClient.closeClient()
+            flowMqttClient.closeClient()
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.d("MQTT", "close client error:${it.message}")
@@ -88,7 +90,7 @@ class MqttViewModel : ViewModel() {
     fun subscribeBrokerServerTopic1() {
         viewModelScope.launch {
             val message = FlowMqttMessage.createTopicMessage(topic = "flow_mqtt_topic1")
-            FlowMqttClient.subscribeBrokerServerTopic(message)
+            flowMqttClient.subscribeBrokerServerTopic(message)
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.d("MQTT", "subscribe topic error:${it.message}")
@@ -103,7 +105,7 @@ class MqttViewModel : ViewModel() {
     fun subscribeBrokerServerTopic2() {
         viewModelScope.launch {
             val message = FlowMqttMessage.createTopicMessage(topic = "flow_mqtt_topic2")
-            FlowMqttClient.subscribeBrokerServerTopic(message)
+            flowMqttClient.subscribeBrokerServerTopic(message)
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.d("MQTT", "subscribe topic error:${it.message}")
@@ -117,7 +119,7 @@ class MqttViewModel : ViewModel() {
     fun unsubscribeBrokerServerTopic() {
         viewModelScope.launch {
             val message = FlowMqttMessage.createTopicMessage(topic = "flow_mqtt_topic")
-            FlowMqttClient.unsubscribeBrokerServerTopic(message)
+            flowMqttClient.unsubscribeBrokerServerTopic(message)
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.d("MQTT", "unsubscribe topic error:${it.message}")
@@ -132,7 +134,7 @@ class MqttViewModel : ViewModel() {
     fun publishMqttMessage() {
         viewModelScope.launch {
             val message = FlowMqttMessage.create(topic = "flow_mqtt_topic",payload = "mqtt test publish message")
-            FlowMqttClient.publishMqttMessage(message)
+            flowMqttClient.publishMqttMessage(message)
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.d("MQTT", "publish message error:${it.message}")
@@ -145,7 +147,7 @@ class MqttViewModel : ViewModel() {
 
     fun subscribeMqttMessage() {
 //        viewModelScope.launch {
-//            FlowMqttClient.subscribeMqttMessage()
+//            flowMqttClient.subscribeMqttMessage()
 //                .flowOn(Dispatchers.IO)
 //                .catch {
 //                    Log.d("MQTT", "subscribe message error:${it.message}")
@@ -158,7 +160,7 @@ class MqttViewModel : ViewModel() {
 
     fun subscribeMessagePublishStatus() {
         viewModelScope.launch {
-            FlowMqttClient.subscribeMessagePublishStatus()
+            flowMqttClient.subscribeMessagePublishStatus()
                 .flowOn(Dispatchers.IO)
                 .catch {
                     Log.d("MQTT", "subscribe message publish status error:${it.message}")
