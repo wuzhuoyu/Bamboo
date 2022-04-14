@@ -75,12 +75,12 @@ dependencies{
 afterEvaluate {
     publishing{
         publications {
-            create<MavenPublication>("release") {
-                groupId = "com.yuu.android.component"
-                artifactId = "bamboo"
+            create<MavenPublication>("maven") {
+                groupId = "com.github.WuZhuoYu"
+                artifactId = "Bamboo"
                 version = "0.0.1"
 
-                from(components["release"])
+//                from(components["release"])
             }
         }
     }
