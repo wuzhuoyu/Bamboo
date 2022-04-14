@@ -9,6 +9,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
+    `maven-publish`
 }
 
 android {
@@ -69,4 +70,18 @@ dependencies{
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
 
+}
+
+afterEvaluate {
+    publishing{
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = "com.yuu.android.component"
+                artifactId = "bamboo"
+                version = "0.0.1"
+
+                from(components["release"])
+            }
+        }
+    }
 }
