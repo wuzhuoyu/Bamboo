@@ -46,8 +46,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -75,13 +75,13 @@ dependencies{
 afterEvaluate {
     publishing{
         publications {
-            create<MavenPublication>("maven") {
-                groupId = "com.github.WuZhuoYu"
-                artifactId = "Bamboo"
-                version = "0.0.1"
+           create<MavenPublication>("release"){
+               group = "com.yuu.android.component"
+               artifactId = "Bamboo"
+               version = "0.0.1"
 
-//                from(components["release"])
-            }
+               afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
+           }
         }
     }
 }
