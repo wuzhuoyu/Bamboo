@@ -41,27 +41,38 @@ class FlowMqttAndroidClient : MqttAsyncClient, IFlowMqttAndroidClient {
     ): IMqttToken {
         //进行链接配置
         val connectOptions = MqttConnectOptions()
-        connectOptions.mqttVersion = options.mqttVersion
-        //如果为false(flag=0)，Client断开连接后，Server应该保存Client的订阅信息
-        //如果为true(flag=1)，表示Server应该立刻丢弃任何会话状态信息
-        //设置清空Session，false表示服务器会保留客户端的连接记录，true表示每次以新的身份连接到服务器
-        connectOptions.isCleanSession = false
-        //设置用户名和密码
-        connectOptions.userName = options.userName
-        connectOptions.password = options.password?.toCharArray()
-        //设置连接超时时间
-        connectOptions.connectionTimeout = options.connectionTimeout
-        //设置心跳发送间隔时间，单位秒
-        connectOptions.keepAliveInterval = options.keepAliveInterval
-        // 客户端是否自动尝试重新连接到服务器
-        connectOptions.isAutomaticReconnect = true
-        //设置遗嘱
-        connectOptions.setWill(
-            "android-mqtt-offline-topic",
-            "android-mqtt-is_offline".toByteArray(),
-            FlowMqttQos.EXACTLY_ONCE.value(),
-            false
-        )
+        connectOptions.apply {
+            mqttVersion = MqttConnectOptions.MQTT_VERSION_3_1_1
+
+            //如果为false(flag=0)，Client断开连接后，Server应该保存Client的订阅信息
+            //如果为true(flag=1)，表示Server应该立刻丢弃任何会话状态信息
+            //设置清空Session，false表示服务器会保留客户端的连接记录，true表示每次以新的身份连接到服务器
+            isCleanSession = options.isCleanSession ?: MqttConnectOptions.CLEAN_SESSION_DEFAULT
+
+            //设置用户名和密码
+            userName = options.account ?: ""
+            password = options.password?.toCharArray()?: "".toCharArray()
+
+            //设置连接超时时间
+            connectionTimeout = options.connectionTimeout?:MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT
+
+            //设置心跳发送间隔时间，单位秒
+            keepAliveInterval = options.keepAliveInterval?:MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT
+
+            // 客户端是否自动尝试重新连接到服务器
+            isAutomaticReconnect = options.isAutomaticReconnect?:false
+
+
+
+            //设置遗嘱
+            setWill(
+                options.setWillTopic ?: "set_will_topic",
+                (options.setWillPayload ?: "set_will_payload").toByteArray(),
+                options.setWillQos ?: FlowMqttQos.EXACTLY_ONCE.value(),
+                options.setWillRetained ?: false
+            )
+
+        }
 
         return super.connect(connectOptions, null, callback)
     }

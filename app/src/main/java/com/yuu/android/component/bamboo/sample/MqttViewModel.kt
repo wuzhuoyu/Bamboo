@@ -27,7 +27,7 @@ class MqttViewModel : ViewModel() {
 
     fun connectToBroker() {
         viewModelScope.launch {
-            val options = FlowMqttConnectOptions.build {
+            val options = FlowMqttConnectOptions().apply {
                 brokerServerUrl = "tcp://192.168.100.150:1883"
                 account = "1234567"
                 password = "1234567:1234567"
