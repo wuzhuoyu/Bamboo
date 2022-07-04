@@ -1,9 +1,6 @@
 package com.yuu.android.component.bamboo.paho
 
-import org.eclipse.paho.client.mqttv3.IMqttActionListener
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener
-import org.eclipse.paho.client.mqttv3.IMqttToken
-import org.eclipse.paho.client.mqttv3.MqttMessage
 
 /**
  * @InterfaceName : IFlowMqttMessageListener
