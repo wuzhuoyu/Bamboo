@@ -11,40 +11,37 @@ package com.yuu.android.component.bamboo.exception
 open class FlowMqttException(message: String?, cause: Throwable?=null) : RuntimeException(message, cause) {
 
 
-
-
     companion object {
-        private const val serialVersionUID = 6374001815972669318L
 
         @JvmField
-        val brokerUrlNull = FlowMqttException("broker server url can not null")
+        val brokerUrlNull = FlowMqttException("Broker代理服务器url不能为空")
 
         @JvmField
-        val clientIsNull = FlowMqttException("client can not null")
+        val clientIsNull = FlowMqttException("客户端不能为空")
 
         @JvmField
-        val optionsNull = FlowMqttException("MQTT options is null")
+        val optionsNull = FlowMqttException("MQTT参数为空")
 
         @JvmField
-        val msgTopicNull = FlowMqttException("MQTT message topic is null")
+        val msgTopicNull = FlowMqttException("MQTT消息主题为空")
 
         @JvmField
-        val brokerConnectFailure = FlowMqttException("broker connection failed")
+        val brokerConnectFailure = FlowMqttException("Broker代理服务器连接失败")
 
         @JvmField
-        val brokerDisconnectFailure = FlowMqttException("broker disconnection failed")
+        val brokerDisconnectFailure = FlowMqttException("Broker代理服务器断开失败")
 
         @JvmField
-        val brokerRestartConnectFailure = FlowMqttException("broker restart connection failed")
+        val brokerRestartConnectFailure = FlowMqttException("Broker代理服务器重启连接失败")
 
         @JvmField
-        val brokerHasBeenDisConnect = FlowMqttException("broker has been disconnected, no need to repeat the operation")
+        val brokerHasBeenDisConnect = FlowMqttException("Broker代理服务器已断开，无需重复操作")
 
         @JvmField
-        val brokerHasBeenConnecting = FlowMqttException("broker connecting, please do not disconnect at this time")
+        val brokerHasBeenConnecting = FlowMqttException("Broker代理服务器正在连接中，请不要在此时断开连接")
 
         @JvmField
-        val brokerOffline = FlowMqttException("broker offline")
+        val brokerOffline = FlowMqttException("Broker代理服务器离线")
 
     }
 }

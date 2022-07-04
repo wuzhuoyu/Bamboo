@@ -62,7 +62,7 @@ open class FlowMqttClient : FlowMqttApi {
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                         brokerStatus.error = exception
                         close()
-                        throw FlowMqttException("broker connect failure", cause = exception)
+                        throw FlowMqttException("Broker代理服务器连接失败", cause = exception)
                     }
                 }
 
@@ -73,7 +73,7 @@ open class FlowMqttClient : FlowMqttApi {
                 } catch (e: MqttException) {
                     brokerStatus.connectingFailure()
                     brokerStatus.error = e
-                    throw FlowMqttException("broker connect failure", cause = e)
+                    throw FlowMqttException("Broker代理服务器连接失败", cause = e)
                 }
                 awaitClose {
                     Log.i("FlowMqtt", ":::连接broker流关闭")
@@ -104,7 +104,7 @@ open class FlowMqttClient : FlowMqttApi {
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                         brokerStatus.error = exception
                         close()
-                        throw FlowMqttException("broker disconnect failure", cause = exception)
+                        throw FlowMqttException("Broker代理服务器断开失败", cause = exception)
                     }
                 }
 
@@ -112,7 +112,7 @@ open class FlowMqttClient : FlowMqttApi {
                     client?.disconnectBroker(mqttActionListener)
                 } catch (e: MqttException) {
                     brokerStatus.error = e
-                    throw FlowMqttException("broker disconnect failure", cause = e)
+                    throw FlowMqttException("Broker代理服务器断开失败", cause = e)
                 }
                 awaitClose {
                     Log.i("FlowMqtt", ":::断开broker流关闭")
@@ -129,7 +129,7 @@ open class FlowMqttClient : FlowMqttApi {
                 client?.close()
                 brokerStatus.disconnectSuccess()
             } catch (e: MqttException) {
-                throw FlowMqttException("close client error", cause = e)
+                throw FlowMqttException("关闭客户端错误", cause = e)
             }
         }
     }
@@ -159,7 +159,7 @@ open class FlowMqttClient : FlowMqttApi {
 
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                         close()
-                        throw FlowMqttException("publish message error", exception)
+                        throw FlowMqttException("发布消息的错误", exception)
                     }
                 }
 
@@ -193,12 +193,12 @@ open class FlowMqttClient : FlowMqttApi {
                 //asynchronous callback result
                 val mqttActionListener = object : IFlowMqttActionListener {
                     override fun onSuccess(asyncActionToken: IMqttToken?) {
-                        Log.i("FlowMqtt", "subscribe topic success! ")
+                        Log.i("FlowMqtt", "订阅主题成功!")
                     }
 
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                         close()
-                        Log.i("FlowMqtt", "subscribe topic failure! ")
+                        Log.i("FlowMqtt", "订阅主题失败! ")
                         throw FlowMqttException(message = "订阅主题失败", cause = exception)
                     }
                 }
@@ -246,7 +246,7 @@ open class FlowMqttClient : FlowMqttApi {
 
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                         close()
-                        throw FlowMqttException("unsubscribe topic error", exception)
+                        throw FlowMqttException("取消订阅主题错误", exception)
                     }
                 }
 
@@ -271,7 +271,7 @@ open class FlowMqttClient : FlowMqttApi {
             callbackFlow {
                 val mqttCallback = object : MqttCallback {
                     override fun connectionLost(cause: Throwable?) {
-                        Log.i("FlowMqtt", "broker lost:::$cause")
+                        Log.i("FlowMqtt", "Broker代理服务器丢失:::$cause")
                         brokerStatus.isConnected = false
                         trySend(false)
                     }
@@ -284,7 +284,7 @@ open class FlowMqttClient : FlowMqttApi {
                     it.setCallback(mqttCallback)
                 } catch (e: Exception) {
                     close()
-                    throw FlowMqttException("subscribe Connection Status error", e)
+                    throw FlowMqttException("订阅状态错误", e)
                 }
 
 
@@ -324,7 +324,7 @@ open class FlowMqttClient : FlowMqttApi {
                     it.setCallback(mqttCallback)
                 } catch (e: Exception) {
                     close()
-                    throw FlowMqttException("publish message status error", e)
+                    throw FlowMqttException("发布消息状态错误", e)
                 }
 
 
