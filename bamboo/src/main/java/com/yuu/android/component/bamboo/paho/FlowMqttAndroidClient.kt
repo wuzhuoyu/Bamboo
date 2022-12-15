@@ -1,5 +1,10 @@
 package com.yuu.android.component.bamboo.paho
 
+import com.blankj.utilcode.util.ObjectUtils
+import com.orhanobut.logger.AndroidLogAdapter
+import com.orhanobut.logger.FormatStrategy
+import com.orhanobut.logger.Logger
+import com.orhanobut.logger.PrettyFormatStrategy
 import com.yuu.android.component.bamboo.config.FlowMqttConnectOptions
 import com.yuu.android.component.bamboo.config.enums.FlowMqttQos
 import com.yuu.android.component.bamboo.model.FlowMqttMessage
@@ -32,6 +37,13 @@ class FlowMqttAndroidClient : MqttAsyncClient, IFlowMqttAndroidClient {
         options: FlowMqttConnectOptions,
         persistence: MqttClientPersistence?
     ) : super(options.brokerServerUrl, options.clientId, persistence) {
+
+        val formatStrategy: FormatStrategy = PrettyFormatStrategy.newBuilder()
+            .build()
+        Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
+        if (ObjectUtils.isEmpty("测试")) {
+            Logger.t("测试")
+        }
     }
 
 

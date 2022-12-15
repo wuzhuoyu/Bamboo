@@ -70,6 +70,13 @@ dependencies{
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
 
+    // logger
+    implementation("com.orhanobut:logger:2.2.0")
+    // blankj
+    implementation("com.blankj:utilcodex:1.31.1")
+    // gson
+    implementation("com.google.code.gson:gson:2.8.6")
+
 }
 
 afterEvaluate {
