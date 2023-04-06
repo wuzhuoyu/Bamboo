@@ -55,7 +55,7 @@ android {
 }
 
 dependencies{
-
+    api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar","*.aar"))))
     implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.2")
