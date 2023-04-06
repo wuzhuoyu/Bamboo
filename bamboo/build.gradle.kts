@@ -62,8 +62,8 @@ dependencies{
 
 
     //链接[https://github.com/eclipse/paho.mqtt.android]
-    implementation ("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0")
-    implementation ("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
+    api("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0")
+    api("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
 
     //协程
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
