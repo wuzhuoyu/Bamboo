@@ -42,7 +42,7 @@ open class FlowMqttClient : FlowMqttApi {
         }.map {
             //broker can not duplicate connection or connecting
             if (brokerStatus.isConnected) throw FlowMqttException.brokerConnectFailure else it
-        }.flatMapConcat<FlowMqttConnectOptions, Boolean> {
+        }.flatMapConcat {
             callbackFlow {
                 //create a client
                 client = FlowMqttAndroidClient(options = it)
