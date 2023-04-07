@@ -76,9 +76,6 @@ afterEvaluate {
                artifactId = "Bamboo"
                version = "0.0.4"
                from(components["release"])
-//               afterEvaluate {
-//                   artifact(tasks.getByName("bundleReleaseAar"))
-//               }
            }
         }
     }

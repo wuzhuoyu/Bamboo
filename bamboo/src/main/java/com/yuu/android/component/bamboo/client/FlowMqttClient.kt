@@ -190,13 +190,13 @@ open class FlowMqttClient : FlowMqttApi {
                 //asynchronous callback result
                 val mqttActionListener = object : IFlowMqttActionListener {
                     override fun onSuccess(asyncActionToken: IMqttToken?) {
-                        Log.i("FlowMqtt", "订阅主题成功!")
+                        Log.i("FlowMqtt", "订阅主题：${flowMqttMessage.getMessageTopic()}成功")
                     }
 
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                         close()
-                        Log.i("FlowMqtt", "订阅主题失败! ")
-                        throw FlowMqttException(message = "订阅主题失败", cause = exception)
+                        Log.i("FlowMqtt", "订阅主题：${flowMqttMessage.getMessageTopic()}失败! ")
+                        throw FlowMqttException(message = "订阅主题：${flowMqttMessage.getMessageTopic()}失败", cause = exception)
                     }
                 }
 
