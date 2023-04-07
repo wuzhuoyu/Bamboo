@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.managedDeviceGroupSingleVariantTaskName
 
 /**
  *作为 application 运行时需要配置 plugin application applicationId versionCode versionName isDebuggable
@@ -74,8 +75,10 @@ afterEvaluate {
                group = "com.yuu.android.component"
                artifactId = "Bamboo"
                version = "0.0.4"
-
-               afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
+               from(components["release"])
+//               afterEvaluate {
+//                   artifact(tasks.getByName("bundleReleaseAar"))
+//               }
            }
         }
     }
