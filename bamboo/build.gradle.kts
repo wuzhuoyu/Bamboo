@@ -55,16 +55,14 @@ android {
 }
 
 dependencies{
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar","*.aar"))))
     implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
-    androidTestImplementation ("androidx.test.ext:junit:1.1.2")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:3.3.0")
-
-
     //链接[https://github.com/eclipse/paho.mqtt.android]
-    api("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0")
-    api("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
-
+    api("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0"){
+        isTransitive = true
+    }
+    api("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1"){
+        isTransitive = true
+    }
     //协程
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
