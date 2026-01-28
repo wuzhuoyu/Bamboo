@@ -74,7 +74,7 @@ afterEvaluate {
            create<MavenPublication>("release"){
                group = "com.yuu.android.component"
                artifactId = "Bamboo"
-               version = "0.0.6"
+               version = "0.0.8"
                from(components["release"])
            }
         }
