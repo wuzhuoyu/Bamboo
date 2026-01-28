@@ -25,6 +25,10 @@ android {
         multiDexEnabled = true
     }
 
+    buildFeatures {
+        buildConfig = false
+    }
+
     buildTypes {
         getByName("release") {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
